@@ -1,49 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="26">
- <tileset firstgid="1" source="../Terrain (16x16).tsx"/>
- <tileset firstgid="243" source="../Brown.tsx"/>
- <tileset firstgid="259" source="../Idle.tsx"/>
- <tileset firstgid="260" source="Confetti (16x16).tsx"/>
- <tileset firstgid="261" source="../Confetti (16x16).tsx"/>
- <tileset firstgid="267" name="Start" tilewidth="64" tileheight="64" tilecount="3" columns="0">
-  <grid orientation="orthogonal" width="1" height="1"/>
-  <tile id="0">
-   <image source="../Free/Items/Checkpoints/Start/Start (Idle).png" width="64" height="64"/>
-  </tile>
-  <tile id="1">
-   <image source="../Free/Items/Checkpoints/End/End (Idle).png" width="64" height="64"/>
-  </tile>
-  <tile id="2">
-   <image source="../Free/Items/Checkpoints/Checkpoint/Checkpoint (No Flag).png" width="64" height="64"/>
-  </tile>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="5" nextobjectid="1">
+ <tileset firstgid="1" name="Terrain (16x16)" tilewidth="16" tileheight="16" tilecount="242" columns="22">
+  <image source="../../Frame/Free/Terrain/Terrain (16x16).png" width="352" height="176"/>
+ </tileset>
+ <tileset firstgid="243" name="Brown" tilewidth="16" tileheight="16" tilecount="16" columns="4">
+  <image source="../../Frame/Free/Background/Brown.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="259" name="Idle" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../../Frame/Free/Traps/Spikes/Idle.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="260" name="Off" tilewidth="16" tileheight="16" tilecount="4" columns="2">
+  <image source="../../Frame/Free/Traps/Saw/Off.png" width="38" height="38"/>
+ </tileset>
+ <tileset firstgid="264" name="Confetti (16x16)" tilewidth="16" tileheight="16" tilecount="6" columns="6">
+  <image source="../../Frame/Free/Other/Confetti (16x16).png" width="96" height="16"/>
  </tileset>
  <layer id="1" name="Background" width="150" height="25">
   <data encoding="base64" compression="zstd">
-   KLUv/WCYOe0FACQDAPcAAAD4AAAA+QAAAPr7AAAA/AAAAP0AAAD+/wEAAAEBAAACAfMAAAD0AAAA9QAAAPY3qNDVYw4wAkpa9gERIAT//39I6AlR2QM5s4bB/BQqccOg/BQkccNofgqTvIbR/BQgecNgfgohccNgfgqSuGFUfgqTfMNofgqQXMNgfgqROGKwPgOROGK0PoNJPmJUfQaQPGKwPoMQ1DJYn4EJtozWZ/DRBhgmg3sXZlEbjZZimPHkMQx+4pjKkA==
+   KLUv/WCYOe0FACQDAPcAAAD4AAAA+QAAAPr7AAAA/AAAAP0AAAD+/wEAAAEBAAACAfMAAAD0AAAA9QAAAPY3qNDVYw4wAkpa9gERIAT//z9I8AlR2QM5s4bB/BQqccOg/BQkccNofgqTvIbR/BQgecNgfgohccNgfgqSuGFUfgqTfMNofgqQXMNgfgqRuGEwPwORuGE0P4NJvmFUfgaQvGEwP4MQ1DKYn4EJtozmZ/DRBhwmg3sbZlEbjZZymPHkOQx+4pjKkA==
   </data>
  </layer>
  <layer id="2" name="Boundary Walls" width="150" height="25">
   <data encoding="base64" compression="zstd">
-   KLUv/WCYOZUCALhwAAAA0wAAAL0AAAC+v8AAwNbW09Ps0xGAsPJizZnsHmDDFYHSYNzVChVQnXig1yXZjGOLqLzBCWMO+FGAKluEWSdwlbeI4oVwlwOospd/RwI=
-  </data>
- </layer>
- <layer id="3" name="Solid Floating Plantforms" width="150" height="25">
-  <data encoding="base64" compression="zstd">
-   KLUv/WCYOU0IAJQDACPTAF8AAABgYQDTdQAAAHZiAAAAYwDTeAAAAHlfdtN3AHsAAAApdXt7AF91e3t2YF9hYXZ2dnV1VaBAdbUBcIIjIjJyHu3SH8pqNBVc/BjdgvCZwhSeoHYxI1yqK2ZOYHBXSofKlShbEDk/lm5B+BQk5kcGujTc19y436wT7qkcaR4B3JXwL5zaza6EEKK5BWloidso0S4Z93ULkhknSH1iGxvhfCZb0URB6jZJMjGnW0IOU9ZR7aINTJTHORMYsSjUBKPjlqbrq0T9BlWXiUWjUABNPKVnSV63TLZXGbUSOYGTFSOWVMSSENpyOS5glSNxC8LlVaB2hlW6taSMudplkBy9YgE=
+   KLUv/WCYOU0NAMJFEhywJ60BjD4y3zYlqdx8WbVmW4Tr1p5hACz0Qy4paz3HjEkQQqgUxNBZ4JydK4gfriLxJOEDBThyR8O5FZiXtZRSaZoajC9+LwSAkKBAVSGtAXACIyIygpwDmdzv8G25NCUYd5Ut4IpH22vKB4AeRp0zbRn4u8hscMo9vdXI94zg68pwdrXFo/b443y7lW/Jzqwzky2Kd5o1z1lQOKlbzQCMaD3us5tbEHqPzz3Dl9+SnKkz0y0adxeRDU7wphdhEHm7vSV0XxTdMWTsvaTeyC0qiacu6qejZ7dM5QvnIWEESTa//12l3MJTJ75kOUeA2dsdKfmdnS3XZKqunqqkVRp+b5wAwqEkAkprC5RHyvnJpizNFm5ChJRLQM3R2BZREPeUZ8Sc26hJs9MpEEBzbcsogGOZsiDoKRC4nNtiarlTjOSJaRvd3qEohyMGrPMW0uFK0CAHIzVJpe9TW8tbmm5wl0Alz++iT2n7btmWqmoNpHlPxIAHUm10M25Z1ceqKqmlKKhTE7ZFfykK6qhZUNuC5dIWFJ1CtRVTb4k0wy4CUZV6+cck
   </data>
  </layer>
  <layer id="4" name="Hazards" width="150" height="25">
   <data encoding="base64" compression="zstd">
-   KLUv/WCYOaUCAFgAAwEDAQMBBQEFARuAoHU5w59vgxYnnYk/RToimm+LloaGqpDOt0GLk2binyIdEXEvg4oAyp2X+mmu+mXlxIAJQGFndxz4HLpUVDlBdTdscKJ3Pw==
+   KLUv/WCYOc0EAHQCAAMBAGAABAEAAAUBAAMBAAYBAAAHAwEDAQMBCAEIAQgBCAEIAQgBMKBwdYYxIANLEoN0BfMHnO4l098JYu4AXDjPrM8OBwWAFBaoHZ1e0V64r864gyqe2NufItk4BaKa11qqP15OVH4HWcqLO6QCtpLWgfyV1LqlvvStVN6yK99CDrP6t3NqFaItfSVR1W3KQ0NJ4vmZDg==
   </data>
  </layer>
- <objectgroup id="6" name="End">
-  <object id="15" gid="268" x="2238" y="145" width="64" height="64"/>
- </objectgroup>
- <objectgroup id="5" name="Start">
-  <object id="1" gid="267" x="100" y="304" width="64" height="64"/>
- </objectgroup>
- <objectgroup id="7" name="Checkpoint">
-  <object id="25" gid="269" x="1210" y="304" width="64" height="64"/>
- </objectgroup>
+ <layer id="3" name="Solid Floating Plantforms" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOT0KAILEDhqwJ60BjJ5cNEnybHFS1mwJ3t2gJE9bEomDKY2ZGREpuxJcFUoccReKm4YXLnDyAA/llTA4PY5G43kGbKBAk7UBgAITyAQjVw8h01/cbp3yAaKOqXOmWxh3BZENztymv0jZE5JyeunIi8jlEmXqjOmWwV1BZIMzt+kv0jaE21OmLI291HFyuVSZOmO6ZfBXENngzG36C9IhSaUZic5flL6DpOy9S6M5t4QUTyXqp6I3fFk1JCZLo/n7X1HCLTl3Yku3jBHicags12SqrZyqRKuYfn+MB8ahBGLL1NJz/UQqlnGzN5G3cQlSYWGiZMHqKabEnGupSLNTEm4RiRe8n6gi6NSUCW2pfh09xRQmpn07uWPqkLYcakYFZkspye9TSpEU9bL6IKXfyQ+qaHSykCv4pipsy3/3UjuVsj1VTkeFPL+pAQ==
+  </data>
+ </layer>
 </map>
