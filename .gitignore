@@ -1,7 +1,3 @@
-# Bỏ thư mục chứa hình ảnh
-images/
 
 # Bỏ thư mục cache của Python
 __pycache__/
-# Bỏ thư mục sounds
-sounds/
