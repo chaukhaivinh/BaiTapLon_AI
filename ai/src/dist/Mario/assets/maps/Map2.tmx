@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="20">
+ <tileset firstgid="1" name="Terrain (16x16)" tilewidth="16" tileheight="16" tilecount="242" columns="22">
+  <image source="../../Free/Terrain/Terrain (16x16).png" width="352" height="176"/>
+ </tileset>
+ <tileset firstgid="243" name="Brown" tilewidth="16" tileheight="16" tilecount="16" columns="4">
+  <image source="../../Free/Background/Brown.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="259" name="Idle" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../../Free/Traps/Spikes/Idle.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="260" name="Off" tilewidth="16" tileheight="16" tilecount="4" columns="2">
+  <image source="../../Free/Traps/Saw/Off.png" width="38" height="38"/>
+ </tileset>
+ <tileset firstgid="264" name="Confetti (16x16)" tilewidth="16" tileheight="16" tilecount="6" columns="6">
+  <image source="../../Free/Other/Confetti (16x16).png" width="96" height="16"/>
+ </tileset>
+ <tileset firstgid="270" name="Start" tilewidth="64" tileheight="64" tilecount="3" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image source="../../Free/Items/Checkpoints/Start/Start (Idle).png" width="64" height="64"/>
+  </tile>
+  <tile id="1">
+   <image source="../../Free/Items/Checkpoints/End/End (Idle).png" width="64" height="64"/>
+  </tile>
+  <tile id="2">
+   <image source="../../Free/Items/Checkpoints/Checkpoint/Checkpoint (No Flag).png" width="64" height="64"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="273" name="Saw" tilewidth="38" tileheight="38" tilecount="1" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="1">
+   <properties>
+    <property name="boundary_left" type="int" value="95"/>
+    <property name="boundary_right" type="int" value="100"/>
+    <property name="change_x" type="int" value="2"/>
+   </properties>
+   <image source="../../Free/Traps/Saw/Off.png" width="38" height="38"/>
+  </tile>
+ </tileset>
+ <layer id="1" name="Background" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOe0FACQDAPcAAAD4AAAA+QAAAPr7AAAA/AAAAP0AAAD+/wEAAAEBAAACAfMAAAD0AAAA9QAAAPY3qNDVYw4wAkpa9gERIAT//z9I8AlR2QM5s4bB/BQqccOg/BQkccNofgqTvIbR/BQgecNgfgohccNgfgqSuGFUfgqTfMNofgqQXMNgfgqRuGEwPwORuGE0P4NJvmFUfgaQvGEwP4MQ1DKYn4EJtozmZ/DRBhwmg3sbZlEbjZZymPHkOQx+4pjKkA==
+  </data>
+ </layer>
+ <layer id="2" name="Boundary Walls" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOe0CAMhwAAAA0wAAAL0AAAC+v8AAwNbW7NZw1uzsFqDQ3mLN8AKLveQBmewnri1/kwTjTpVAM1DlqvoabEkVjq8weKU1wLQnM9FY5UofCyu2tMwVXHlLyBndA2GVvfx7Eg==
+  </data>
+ </layer>
+ <layer id="4" name="Hazards" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOS0EAOgAAwEAYAADAQADAQMBAwEDAQgBCAEIAQgBCAEIAS6gcNXGAINLUgXpBfM3nO6k0s8BPPcQPJxlrM4OjwZHFhapjo6uUd5wDZ24hS6Y3tvfkGycAlLdY43VjpcTdb+DpKoo0/t3WNQPVto60P4jmctf1frLpPxd2dJfMdUdpyZ2VCKe/+g=
+  </data>
+ </layer>
+ <layer id="8" name="Saw_Moving" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOb0AACAAEgEABABRAXpoylSgD5QC/AE1encF
+  </data>
+ </layer>
+ <layer id="3" name="Solid Floating Platforms" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOYUKAHJEDhnAF1oDb147X9UE6SfchLSJJtKq6lqyejcFjZkZGWUlqHI1ccSF4oYYXrjAxwEeyuslDE6mFEXPM3GgYK/lgAITyAQjVw8h01+cbp35AFHHrHOmLYy7gmSDU27TX2T2hKScXjriInO5pIw6Y9oyuCvIbHDmNvlFbkO4PWWWJbCXOi6XS5RZZ0xbBncFyQan3Ka/IA9JKs1IdP6i1B0kZ+9dKhq4JSTxVKJ+Krrhy+ohMVkazd//gjLckrMTW7plzBCPQ7Wd0XJtxalJWsH0d8cYsBxKveVpFB3rJ1J5GZu9ibyNS5DSwkTkWaKnmBpzrimTJjadMlG2FFsZyfoJFQ+Biz5Ep4Rwy7XVqnlKqU9K2+g0kHCAJuVwxC1tJJFSmC2lJL9PuaVQ8dTN9NOUfCfnUZxCtd1OBuEf7iitbPnXXOpupTin2u2oIc9vUA==
+  </data>
+ </layer>
+ <objectgroup id="5" name="Start">
+  <object id="1" gid="270" x="94" y="303" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup id="6" name="End">
+  <object id="2" gid="271" x="2247" y="143" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup id="9" name="Checkpoints">
+  <object id="19" gid="272" x="1403.34" y="192" width="64" height="64"/>
+ </objectgroup>
+</map>

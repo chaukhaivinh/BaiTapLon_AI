@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="150" height="25" tilewidth="16" tileheight="16" infinite="0" nextlayerid="12" nextobjectid="10">
+ <tileset firstgid="1" name="Terrain (16x16)" tilewidth="16" tileheight="16" tilecount="242" columns="22">
+  <image source="../../Free/Terrain/Terrain (16x16).png" width="352" height="176"/>
+ </tileset>
+ <tileset firstgid="243" name="Confetti (16x16)" tilewidth="16" tileheight="16" tilecount="6" columns="6">
+  <image source="../../Free/Other/Confetti (16x16).png" width="96" height="16"/>
+ </tileset>
+ <tileset firstgid="249" name="Pink" tilewidth="16" tileheight="16" tilecount="16" columns="4">
+  <image source="../../Free/Background/Pink.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="265" name="Idle" tilewidth="16" tileheight="16" tilecount="1" columns="1">
+  <image source="../../Free/Traps/Spikes/Idle.png" width="16" height="16"/>
+ </tileset>
+ <tileset firstgid="266" name="Off" tilewidth="16" tileheight="16" tilecount="4" columns="2">
+  <image source="../../Free/Traps/Saw/Off.png" width="38" height="38"/>
+ </tileset>
+ <tileset firstgid="270" name="On (38x38)" tilewidth="16" tileheight="16" tilecount="38" columns="19">
+  <image source="../../Free/Traps/Saw/On (38x38).png" width="304" height="38"/>
+ </tileset>
+ <tileset firstgid="308" name="Ball" tilewidth="54" tileheight="52" tilecount="1" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <properties>
+   <property name="Ball_left" type="int" value="0"/>
+   <property name="Ball_right" type="int" value="0"/>
+   <property name="Change_x" type="int" value="0"/>
+  </properties>
+  <tile id="1">
+   <properties>
+    <property name="boundary_bottom" type="int" value="6"/>
+    <property name="boundary_top" type="int" value="20"/>
+    <property name="change_y" type="int" value="2"/>
+   </properties>
+   <image source="../../Free/Traps/Spike Head/Idle.png" width="54" height="52"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="310" name="Saw" tilewidth="38" tileheight="38" tilecount="1" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <properties>
+   <property name="Change_x" type="int" value="0"/>
+   <property name="Saw_left" type="int" value="0"/>
+   <property name="Saw_right" type="int" value="0"/>
+  </properties>
+  <tile id="0">
+   <properties>
+    <property name="boundary_left" type="int" value="24"/>
+    <property name="boundary_right" type="int" value="32"/>
+    <property name="change_x" type="int" value="2"/>
+   </properties>
+   <image source="../../Free/Traps/Saw/Off.png" width="38" height="38"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="311" name="Start" tilewidth="64" tileheight="64" tilecount="3" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <image source="../../Free/Items/Checkpoints/Start/Start (Idle).png" width="64" height="64"/>
+  </tile>
+  <tile id="1">
+   <image source="../../Free/Items/Checkpoints/End/End (Idle).png" width="64" height="64"/>
+  </tile>
+  <tile id="2">
+   <image source="../../Free/Items/Checkpoints/Checkpoint/Checkpoint (No Flag).png" width="64" height="64"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="314" name="Brown Off" tilewidth="32" tileheight="8" tilecount="1" columns="0">
+  <grid orientation="orthogonal" width="1" height="1"/>
+  <tile id="0">
+   <properties>
+    <property name="boundary_left" type="int" value="84"/>
+    <property name="boundary_right" type="int" value="90"/>
+    <property name="change_x" type="int" value="2"/>
+   </properties>
+   <image source="../../Free/Traps/Platforms/Brown Off.png" width="32" height="8"/>
+  </tile>
+ </tileset>
+ <layer id="2" name="Background" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOfUFAEQDAP0AAAD+AAAA/wEBAQAAAgEAAAMBAAAEAQUBAAAGAQAABwEAAAgB+QAAAPoAAAD7AAAA/Deo0NVjOjACKnDZBxEgBP//P0cQCpXcAxlzwzxgChnUMBQwBQVomApMwQM0jAOm8EEN44ApvKCGccAUHqhhTGAKH9QwDpjCB2kYB0zhgxrGAVN4QB1jyIewQQ0jAVM4wQ2jgClssJaR8zMYcMvo+hlsNQMOI5nkDbMevQ2zQz0OwycQsDmmmiQ=
+  </data>
+ </layer>
+ <layer id="1" name="Boundary Walls" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOfUCAMhwAAAAewAAAGUAAABmZ2gAaH5+lHsAGBiUFaDgGmPNwIKLzYUdgex3UONuzRH23QoiRTr7ebZcRYWRXd3aLZc8AaiuQeBUVFn2x4JKWy6/AipviZiRuyCqspd/SAI=
+  </data>
+ </layer>
+ <layer id="6" name="Saw_Moving" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOX0AACAANgEAAgCmAvCDfvTuCg==
+  </data>
+ </layer>
+ <layer id="3" name="Solid Floating Platforms" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOW0LABKHFB6wJ60BgMs2AS7b9htFcC4X15kkF94SvV0n+za5kwIjrDHt2LpTN10jkD+SuwQ0SBGbW6zjjcITtWFc8cQXSzobc1aZCgIHqMMNa7o8KEI/lTd+oCDRaj0D0AILREbjNhmD/zjNQc+J71C+LS5CqkYoHDnP0njHRUEdh95hnOpT2fIZLVUjFBw5z9J4x0ehRkML62R48toOeqfzQeNXUqt0jdBw5T6X1ikucmoHqmuRQ1IgpU6gZhVoC6prPiZwW0AJSJubueUpOerpMyjoQcQfwk3c9YXpjtxiii9SmMgxechcZltiwpLWfJjOaS16hVDcVUcDpbLFqGuQewo8GCNilNjQOUhVHVmD25ktgr9a4FhWndxrelwIgIieRB88sXIKSmwK0Olx0QAivtCW8fM4m3omNhZxW62QDaWkQ6RiVYdSCVSJWTHTnPQKa3SL1IRQp7s0jxTrxB6pfue+p2Rm7tbUKa1ghx+y
+  </data>
+ </layer>
+ <layer id="4" name="Hazards" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOaUDANAACQEAYAAJAQCgCQEJAQkBAMAJAQkB8/Pz8yOgUK2xATCDU5zmef4xUMTslLpMGa62M6XDVDjOoL4ppdQgVwungp7Kh+1UfaVq0wpUdUtpmcpcjSHyjFOl1FagfjQqqvNqKKUJtcegf8uuecYmYhWooo8j
+  </data>
+ </layer>
+ <layer id="5" name="Ball_Moving" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYObUAACAANQEABACRD3ooZ538A3HAPzBB764=
+  </data>
+ </layer>
+ <layer id="11" name="Moving_Platforms" width="150" height="25">
+  <data encoding="base64" compression="zstd">
+   KLUv/WCYOX0AACAAOgEAAgC+A/qBNvDuCg==
+  </data>
+ </layer>
+ <objectgroup id="7" name="Start">
+  <object id="2" gid="311" x="99.3333" y="144" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup id="8" name="Checkpoints">
+  <object id="3" gid="313" x="1152.67" y="304" width="64" height="64"/>
+ </objectgroup>
+ <objectgroup id="10" name="End">
+  <object id="8" gid="312" x="2257.33" y="306" width="64" height="64"/>
+ </objectgroup>
+</map>
