@@ -5,6 +5,7 @@ from algorithm_logger import AlgorithmLogger
 from utils import load_game_map
 from spiked_ball import SpikedBall
 from fruit_item import FruitItem
+from ai_algorithms import csp_spawn_positions
 
 
 class BaseLevel(arcade.View):
@@ -91,9 +92,9 @@ class BaseLevel(arcade.View):
         else:
             thumb_height = max(40, min(bar_height * 0.45, bar_height * (self.visible_log_lines / total_logs)))
             max_offset = total_logs - self.visible_log_lines
-            ratio = self.log_scroll_offset / max_offset if max_offset > 0 else 0
             travel = max(1, bar_height - thumb_height)
-            thumb_y = bar_y + ratio * travel
+            ratio = self.log_scroll_offset / max_offset if max_offset > 0 else 0
+            thumb_y = bar_y + (1 - ratio) * travel
 
         hitbox_padding = 8
         return {
@@ -174,12 +175,10 @@ class BaseLevel(arcade.View):
 
         invalid_x_zones = set()
 
-        # Chặn gần vị trí bắt đầu thật sự của player
         start_gx = int(self.respawn_x // tile_w)
         for i in range(start_gx - 15, start_gx + 16):
             invalid_x_zones.add(i)
 
-        # Chặn gần điểm đích
         for ep in self.end_points:
             gx = int(ep.center_x // tile_w)
             for i in range(gx - 15, gx + 16):
@@ -195,38 +194,41 @@ class BaseLevel(arcade.View):
                     valid_pos.append(spawn_pos)
             return valid_pos
 
-        valid_positions = get_valid_spawn_positions(floating_tiles) + get_valid_spawn_positions(ground_tiles)
-        valid_positions = list(set(valid_positions))
-        valid_positions.sort(key=lambda p: (p[0], p[1]))
+        candidate_positions = get_valid_spawn_positions(floating_tiles) + get_valid_spawn_positions(ground_tiles)
+        candidate_positions = sorted(set(candidate_positions), key=lambda p: (p[0], p[1]))
+        target_total = min(len(candidate_positions), random.randint(12, 18))
 
         final_item_positions = []
-        target_total = min(len(valid_positions), random.randint(12, 18))
+        if candidate_positions and target_total > 0:
+            csp_result = csp_spawn_positions(
+                target_total,
+                candidate_positions,
+                forbidden_positions=static_hazards,
+                min_distance=2,
+                trace_limit=12,
+                detail_variable_limit=3,
+            )
+            final_item_positions = csp_result.get("positions", [])
 
-        if valid_positions and target_total > 0:
-            segment_size = max(1, len(valid_positions) // target_total)
+            AlgorithmLogger.log(
+               
+                f"- Bài toán: rải {target_total} táo\n"
+                f"- Số biến cần gán: {target_total}\n"
+                f"- Số vị trí ứng viên: {len(candidate_positions)}\n"
+                f"- Đã gán: {len(final_item_positions)}/{target_total}\n"
+                f"- Số lần thử gán: {csp_result.get('attempts', 0)}\n"
+                f"- Số lần bị loại: {csp_result.get('rejects', 0)}\n"
+                f"- Số lần quay lui: {csp_result.get('backtracks', 0)}\n"
+                f"- Trạng thái: {'Tìm thấy nghiệm hợp lệ' if csp_result.get('found') else 'Chưa tìm đủ nghiệm'}"
+            )
 
-            for i in range(target_total):
-                start_idx = i * segment_size
-                end_idx = min(len(valid_positions), start_idx + segment_size)
-
-                if start_idx >= len(valid_positions):
-                    break
-
-                segment = valid_positions[start_idx:end_idx]
-                if segment:
-                    chosen = random.choice(segment)
-                    final_item_positions.append(chosen)
-
-            if len(final_item_positions) < target_total:
-                remaining = [p for p in valid_positions if p not in final_item_positions]
-                need_more = target_total - len(final_item_positions)
-                if remaining:
-                    extra_items = random.sample(remaining, min(need_more, len(remaining)))
-                    final_item_positions.extend(extra_items)
+            for line in csp_result.get("trace", []):
+                AlgorithmLogger.log(line)
 
         AlgorithmLogger.pin("===== NHẬT KÝ THUẬT TOÁN =====")
-        AlgorithmLogger.pin("[AI chính 1] FSM")
-        AlgorithmLogger.pin("[AI chính 2] Hill Climbing")
+        AlgorithmLogger.pin("[Thuật toán 1] FSM")
+        AlgorithmLogger.pin("[Thuật toán 2] Hill Climbing")
+        AlgorithmLogger.pin("[Thuật toán 3] Backtracking (CSP)")
         AlgorithmLogger.pin("================================")
 
         self.fruits_list.clear()
@@ -515,7 +517,7 @@ class BaseLevel(arcade.View):
             new_thumb_y = y - self.log_scroll_drag_offset
             new_thumb_y = max(metrics["bar_y"], min(new_thumb_y, metrics["bar_y"] + travel))
             ratio = (new_thumb_y - metrics["bar_y"]) / travel
-            self.log_scroll_offset = int(round(ratio * metrics["max_offset"]))
+            self.log_scroll_offset = int(round((1 - ratio) * metrics["max_offset"]))
             self._clamp_log_scroll_offset()
         else:
             self.log_scroll_offset = 0
@@ -538,5 +540,5 @@ class BaseLevel(arcade.View):
         new_thumb_y = max(metrics["bar_y"], min(new_thumb_y, metrics["bar_y"] + travel))
 
         ratio = (new_thumb_y - metrics["bar_y"]) / travel
-        self.log_scroll_offset = int(round(ratio * metrics["max_offset"]))
+        self.log_scroll_offset = int(round((1 - ratio) * metrics["max_offset"]))
         self._clamp_log_scroll_offset()

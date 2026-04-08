@@ -8,6 +8,8 @@ from checkpoint import Checkpoint
 from end_point import EndPoint
 from moving_platform import MovingPlatform
 from mushroom import Mushroom
+from algorithm_logger import AlgorithmLogger
+from ai_algorithms import csp_spawn_positions
 
 
 class BaseMapLevel(BaseLevel):
@@ -126,22 +128,31 @@ class BaseMapLevel(BaseLevel):
         self.spawn_enemies()
 
     def _is_stomp_hit(self, enemy, prev_player_bottom):
-        if self.player.change_y >= -0.1:
+        """
+        Nới vùng dẫm để người chơi đạp trán / đầu / sau gáy nấm vẫn được tính là stomp.
+        Đồng thời chỉ cần người chơi đang rơi xuống là đủ, không bắt quá chính xác vào giữa đầu.
+        """
+        if self.player.change_y >= 0:
             return False
 
-        previous_above_head = prev_player_bottom >= (enemy.center_y - 2)
-        current_feet_near_head = self.player.bottom >= (enemy.center_y - enemy.height * 0.35)
-        player_above_enemy = self.player.center_y >= enemy.center_y
+        enemy_top = enemy.top
+        enemy_upper_zone = enemy.center_y + enemy.height * 0.05
+
+        came_from_above = prev_player_bottom >= enemy_upper_zone - 8
+        feet_reached_top_zone = self.player.bottom >= enemy_upper_zone - 14
+        player_above_enemy = self.player.center_y >= enemy.center_y - enemy.height * 0.05
 
         overlap_left = max(self.player.left, enemy.left)
         overlap_right = min(self.player.right, enemy.right)
         horizontal_overlap = max(0, overlap_right - overlap_left)
-        min_required_overlap = min(self.player.width, enemy.width) * 0.2
+        min_required_overlap = min(self.player.width, enemy.width) * 0.08
+
+        close_to_enemy_top = self.player.bottom >= enemy_top - enemy.height * 0.55
 
         return (
-            previous_above_head
-            and current_feet_near_head
-            and player_above_enemy
+            (came_from_above or player_above_enemy)
+            and feet_reached_top_zone
+            and close_to_enemy_top
             and horizontal_overlap >= min_required_overlap
         )
 
@@ -192,34 +203,45 @@ class BaseMapLevel(BaseLevel):
                     del self.enemy_physics_engines[enemy]
 
             # Logic dậm Nấm hoặc bị Nấm cắn
-            if self.player.invincible_timer <= 0:
-                hit_enemies = [enemy for enemy in arcade.check_for_collision_with_list(self.player, self.enemy_list) if not enemy.is_dead]
-                if hit_enemies:
-                    stomped_enemies = []
-                    harmful_enemies = []
+            hit_enemies = [enemy for enemy in arcade.check_for_collision_with_list(self.player, self.enemy_list) if not enemy.is_dead]
+            if hit_enemies:
+                stomped_enemies = []
+                harmful_enemies = []
 
-                    for enemy in hit_enemies:
-                        stomp_from_above = self._is_stomp_hit(enemy, prev_player_bottom)
-                        if stomp_from_above:
-                            stomped_enemies.append(enemy)
-                        else:
-                            harmful_enemies.append(enemy)
+                for enemy in hit_enemies:
+                    if self._is_stomp_hit(enemy, prev_player_bottom):
+                        stomped_enemies.append(enemy)
+                    else:
+                        harmful_enemies.append(enemy)
 
-                    if stomped_enemies:
-                        for enemy in stomped_enemies:
+                # Ưu tiên stomp: nếu trong cùng một khung hình dẫm trúng nhiều nấm thì chết hết
+                if stomped_enemies:
+                    killed_count = 0
+                    for enemy in stomped_enemies:
+                        if not enemy.is_dead:
                             enemy.play_death()
+                            killed_count += 1
+
+                    if killed_count > 0:
                         self.player.change_y = PLAYER_JUMP_SPEED
-                    elif harmful_enemies:
-                        if self.player.is_big:
-                            self.player.is_big = False
-                            self.player.scale = self.player.normal_scale
-                            self.player.invincible_timer = 1.0
-                            self.player.play_hit()
-                        else:
-                            self.is_dying = True
-                            self.death_timer = 0.0
-                            self.player.play_disappear()
-                            return
+                        AlgorithmLogger.log_once_per_key(
+                            f"stomp_multi_{id(self)}_{killed_count}",
+                            f"💥 [Stomp] Người chơi dẫm trúng {killed_count} bot và bật nảy lên.",
+                            cooldown=1.0
+                        )
+
+                # Chỉ xét bị cắn nếu không stomp được bot nào và người chơi không còn miễn thương
+                elif harmful_enemies and self.player.invincible_timer <= 0:
+                    if self.player.is_big:
+                        self.player.is_big = False
+                        self.player.scale = self.player.normal_scale
+                        self.player.invincible_timer = 1.0
+                        self.player.play_hit()
+                    else:
+                        self.is_dying = True
+                        self.death_timer = 0.0
+                        self.player.play_disappear()
+                        return
 
             # Đạn bắn trúng Nấm
             for ball in self.projectiles:
@@ -233,7 +255,6 @@ class BaseMapLevel(BaseLevel):
         tile_w = self.tile_map.tile_width * TILE_SCALING
         tile_h = self.tile_map.tile_height * TILE_SCALING
 
-        # Quét Map để lấy tọa độ gạch cho AI
         self.grid_walls.clear()
         ground_tiles = []
         hazards = set()
@@ -251,48 +272,71 @@ class BaseMapLevel(BaseLevel):
                 hx, hy = int(sprite.center_x // tile_w), int(sprite.center_y // tile_h)
                 hazards.add((hx, hy))
 
-        valid_positions = []
-
-        # Lấy danh sách tọa độ các ô có đích đến
+        candidate_positions = []
         end_tiles = []
         for ep in self.end_points:
             end_tiles.append((int(ep.center_x // tile_w), int(ep.center_y // tile_h)))
 
         for (gx, gy) in ground_tiles:
             spawn_x, spawn_y = gx, gy + 1
-
             if (
                 spawn_x > 15
                 and (spawn_x, spawn_y) not in self.grid_walls
                 and (spawn_x, spawn_y) not in hazards
                 and (spawn_x, spawn_y) not in end_tiles
             ):
-                valid_positions.append((spawn_x, spawn_y))
+                candidate_positions.append((spawn_x, spawn_y))
 
-        # Rải Nấm lên Map
+        candidate_positions = sorted(set(candidate_positions), key=lambda p: (p[0], p[1]))
+
         self.enemy_list.clear()
         self.enemy_physics_engines.clear()
 
         target_count = 3
-        actual_count = min(target_count, len(valid_positions))
+        actual_count = min(target_count, len(candidate_positions))
 
+        selected_positions = []
         if actual_count > 0:
-            selected_positions = random.sample(valid_positions, actual_count)
-            extra_platforms = self.moving_platforms_list if len(self.moving_platforms_list) > 0 else None
+            csp_result = csp_spawn_positions(
+                actual_count,
+                candidate_positions,
+                forbidden_positions=set(end_tiles) | hazards,
+                min_distance=6,
+                trace_limit=12,
+                detail_variable_limit=3,
+            )
+            selected_positions = csp_result.get("positions", [])
 
-            for (gx, gy) in selected_positions:
-                px = (gx * tile_w) + (tile_w / 2)
-                py = (gy * tile_h) + (tile_h / 2)
+            AlgorithmLogger.log(
+                "🧩 [Backtracking-CSP: Enemy Spawn]\n"
+                f"- Bài toán: rải {actual_count} quái\n"
+                f"- Số biến cần gán: {actual_count}\n"
+                f"- Số vị trí ứng viên: {len(candidate_positions)}\n"
+                f"- Đã gán: {len(selected_positions)}/{actual_count}\n"
+                f"- Số lần thử gán: {csp_result.get('attempts', 0)}\n"
+                f"- Số lần bị loại: {csp_result.get('rejects', 0)}\n"
+                f"- Số lần quay lui: {csp_result.get('backtracks', 0)}\n"
+                f"- Trạng thái: {'Tìm thấy nghiệm hợp lệ' if csp_result.get('found') else 'Chưa tìm đủ nghiệm'}"
+            )
 
-                mushroom = Mushroom(px, py)
-                self.enemy_list.append(mushroom)
+            for line in csp_result.get("trace", []):
+                AlgorithmLogger.log(line)
 
-                enemy_engine = create_physics(
-                    mushroom,
-                    self.scene,
-                    GRAVITY,
-                    extra_platforms=extra_platforms
-                )
-                self.enemy_physics_engines[mushroom] = enemy_engine
+        extra_platforms = self.moving_platforms_list if len(self.moving_platforms_list) > 0 else None
+
+        for (gx, gy) in selected_positions:
+            px = (gx * tile_w) + (tile_w / 2)
+            py = (gy * tile_h) + (tile_h / 2)
+
+            mushroom = Mushroom(px, py)
+            self.enemy_list.append(mushroom)
+
+            enemy_engine = create_physics(
+                mushroom,
+                self.scene,
+                GRAVITY,
+                extra_platforms=extra_platforms
+            )
+            self.enemy_physics_engines[mushroom] = enemy_engine
 
         self.scene.add_sprite_list("Enemies", sprite_list=self.enemy_list)

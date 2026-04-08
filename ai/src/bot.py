@@ -3,9 +3,9 @@ import os
 from Settings import *
 from ai_algorithms import (
     hill_climbing_path,
-    bresenham_line_of_sight,
     BotState,
 )
+from bresenham_utils import bresenham_line_of_sight
 from algorithm_logger import AlgorithmLogger
 
 RIGHT_FACING = 0
